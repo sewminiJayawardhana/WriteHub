@@ -82,3 +82,15 @@ server/   # Express API server
 - `POST /api/posts/:postId/comments` – add a comment
 - `DELETE /api/posts/:postId/comments/:commentId` – delete a comment
 
+## UI Screenshots
+
+
+| Page | Preview |
+|------|---------|
+| Login | ![Login Screen](client/public/screenshots/login.png) |
+| Register | ![Register Screen](client/public/screenshots/register.png) |
+| Create Post | ![Create Post Screen](client/public/screenshots/create-post.png) |
+| Recent Posts | ![Recent Posts Screen](client/public/screenshots/recent-posts.png) |
+| My Profile | ![My Profile Screen](client/public/screenshots/profile.png) |
+|Comments Section | ![Comment section Screen](client/public/screenshots/comments.png) |
+
