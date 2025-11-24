@@ -126,14 +126,7 @@ function Profile({
 		if (!file) {
 			return;
 		}
-
-		const reader = new FileReader();
-		reader.onload = () => {
-			if (typeof reader.result === 'string') {
-				onUpdateAvatar(reader.result);
-			}
-		};
-		reader.readAsDataURL(file);
+		onUpdateAvatar(file);
 		event.target.value = '';
 	};
 
