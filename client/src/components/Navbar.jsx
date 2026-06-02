@@ -1,6 +1,8 @@
+import React, { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 
 function Navbar({ currentUser = null, onLogout = () => {} }) {
+	const [imgError, setImgError] = useState(false);
 	const initials = (currentUser?.name
 		?.split(' ')
 		.filter(Boolean)
@@ -44,12 +46,21 @@ function Navbar({ currentUser = null, onLogout = () => {} }) {
 								className="flex items-center gap-3 rounded-full bg-slate-100 px-3 py-2 transition hover:bg-slate-200"
 								to="/profile"
 							>
-								<div className="flex h-9 w-9 items-center justify-center rounded-full bg-indigo-600 text-sm font-semibold text-white">
-									{initials}
+								<div className="relative h-9 w-9 rounded-full overflow-hidden bg-indigo-600 text-sm font-semibold text-white">
+									{currentUser.avatar && !imgError ? (
+										<img
+											src={currentUser.avatar}
+											alt={`${currentUser.name}'s avatar`}
+											className="h-full w-full object-cover"
+											onError={() => setImgError(true)}
+										/>
+									) : (
+										<div className="flex h-full w-full items-center justify-center">{initials}</div>
+									)}
 								</div>
 								<div className="hidden text-left text-sm sm:block">
-									<p className="font-medium text-slate-900">{currentUser.name}</p>
-									<p className="text-xs text-slate-500">My profile</p>
+									
+									<p className="text-s text-slate-500">My profile</p>
 								</div>
 							</Link>
 							<button

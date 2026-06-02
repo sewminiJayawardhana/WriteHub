@@ -11,14 +11,17 @@ import Profile from './pages/Profile.jsx';
 import api from './api/axios.js';
 
 function App() {
+	// Track the signed-in user and posts list
 	const [currentUser, setCurrentUser] = useState(null);
 	const [posts, setPosts] = useState([]);
 	const [isLoadingPosts, setIsLoadingPosts] = useState(true);
 
+	// Helper to read a friendly error message
 	const extractErrorMessage = useCallback((error, fallbackMessage) => {
 		return error?.response?.data?.message ?? fallbackMessage;
 	}, []);
 
+	// Ask the API for the current user on first load
 	const fetchCurrentUser = useCallback(async () => {
 		const token = localStorage.getItem('token');
 		if (!token) {
@@ -40,6 +43,7 @@ function App() {
 	}, [fetchCurrentUser]);
 
 	useEffect(() => {
+		// Load the latest posts whenever the page mounts
 		const fetchPosts = async () => {
 			setIsLoadingPosts(true);
 			try {
@@ -56,6 +60,7 @@ function App() {
 		fetchPosts();
 	}, [extractErrorMessage]);
 
+	// Auth handlers that manage login/register flows
 	const handleLogin = async ({ email, password }) => {
 		try {
 			const { data } = await api.post('/auth/login', { email, password });
@@ -87,11 +92,13 @@ function App() {
 		}
 	};
 
+	// Clear auth state on logout
 	const handleLogout = () => {
 		localStorage.removeItem('token');
 		setCurrentUser(null);
 	};
 
+	// Post CRUD helpers shared across pages
 	const handleCreatePost = async ({ title, content, files }) => {
 		if (!currentUser) {
 			toast.error('Please sign in to create a post.');
@@ -234,6 +241,7 @@ function App() {
 		}
 	};
 
+	// Profile helpers for updating user info
 	const handleUpdateBio = async (bio) => {
 		if (!currentUser) {
 			toast.error('Please sign in to update your bio.');
@@ -272,6 +280,7 @@ function App() {
 		}
 	};
 
+	// Routes wire up the pages with their handlers
 	return (
 		<BrowserRouter>
 			<div className="min-h-screen bg-slate-100">

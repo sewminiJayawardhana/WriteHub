@@ -2,10 +2,12 @@ import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Image as ImageIcon, X } from 'lucide-react';
 
+// Displays the post creation form with image previews
 function CreatePost({
 	currentUser = null,
 	onCreatePost = () => {},
 }) {
+	// Track form inputs, uploads, and submit state
 	const [title, setTitle] = useState('');
 	const [content, setContent] = useState('');
 	const [selectedImages, setSelectedImages] = useState([]);
@@ -13,6 +15,7 @@ function CreatePost({
 	const imageInputRef = useRef(null);
 	const selectedImagesRef = useRef([]);
 
+	// Ask unauthenticated visitors to sign in first
 	if (!currentUser) {
 		return (
 			<section className="rounded-3xl border border-slate-200 bg-white p-12 text-center shadow-sm shadow-slate-200/40">
@@ -30,6 +33,7 @@ function CreatePost({
 		);
 	}
 
+	// Release any generated preview URLs
 	const revokePreview = (image) => {
 		if (image?.file && image.preview) {
 			URL.revokeObjectURL(image.preview);
@@ -42,11 +46,13 @@ function CreatePost({
 
 	useEffect(
 		() => () => {
+			// Clean up previews when the component unmounts
 			selectedImagesRef.current.forEach(revokePreview);
 		},
 		[],
 	);
 
+	// Clear the form after a successful submit
 	const resetForm = () => {
 		setTitle('');
 		setContent('');
@@ -56,6 +62,7 @@ function CreatePost({
 		});
 	};
 
+	// Send the new post up to the parent handler
 	const handleSubmit = async (event) => {
 		event.preventDefault();
 
@@ -83,10 +90,12 @@ function CreatePost({
 		}
 	};
 
+	// Open the hidden file picker
 	const handleImageButtonClick = () => {
 		imageInputRef.current?.click();
 	};
 
+	// Add selected images and create previews
 	const handleImageSelect = (event) => {
 		const files = Array.from(event.target.files ?? []);
 		if (files.length === 0) {
@@ -104,6 +113,7 @@ function CreatePost({
 		event.target.value = '';
 	};
 
+	// Remove an image preview from the list
 	const handleImageRemove = (index) => {
 		setSelectedImages((prev) => {
 			const next = [...prev];
