@@ -16,6 +16,19 @@ function App() {
 	const [posts, setPosts] = useState([]);
 	const [isLoadingPosts, setIsLoadingPosts] = useState(true);
 
+	// Auth modal states
+	const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+	const [authModalMode, setAuthModalMode] = useState('login'); // 'login' | 'register'
+
+	const openAuthModal = (mode = 'login') => {
+		setAuthModalMode(mode);
+		setIsAuthModalOpen(true);
+	};
+
+	const closeAuthModal = () => {
+		setIsAuthModalOpen(false);
+	};
+
 	// Helper to read a friendly error message
 	const extractErrorMessage = useCallback((error, fallbackMessage) => {
 		return error?.response?.data?.message ?? fallbackMessage;
@@ -280,11 +293,22 @@ function App() {
 		}
 	};
 
+	// Helper route guard that redirects to '/' and auto-opens login modal
+	const RequireAuth = ({ children }) => {
+		useEffect(() => {
+			if (!currentUser) {
+				openAuthModal('login');
+			}
+		}, [currentUser]);
+
+		return currentUser ? children : <Navigate to="/" replace />;
+	};
+
 	// Routes wire up the pages with their handlers
 	return (
 		<BrowserRouter>
 			<div className="min-h-screen bg-slate-100">
-				<Navbar currentUser={currentUser} onLogout={handleLogout} />
+				<Navbar currentUser={currentUser} onLogout={handleLogout} onOpenAuth={openAuthModal} />
 				<main className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
 					<Routes>
 						<Route
@@ -297,26 +321,25 @@ function App() {
 									onToggleLike={handleToggleLike}
 									onAddComment={handleAddComment}
 									onDeleteComment={handleDeleteComment}
+									onOpenAuth={openAuthModal}
 								/>
 							}
 						/>
 						<Route
 							path="/create"
 							element={
-								currentUser ? (
+								<RequireAuth>
 									<CreatePost
 										currentUser={currentUser}
 										onCreatePost={handleCreatePost}
 									/>
-								) : (
-									<Navigate to="/login" replace />
-								)
+								</RequireAuth>
 							}
 						/>
 						<Route
 							path="/profile"
 							element={
-								currentUser ? (
+								<RequireAuth>
 									<Profile
 										currentUser={currentUser}
 										posts={posts}
@@ -328,17 +351,37 @@ function App() {
 										onAddComment={handleAddComment}
 										onDeleteComment={handleDeleteComment}
 									/>
-								) : (
-									<Navigate to="/login" replace />
-								)
+								</RequireAuth>
 							}
 						/>
-						<Route path="/login" element={<Login onLogin={handleLogin} />} />
-						<Route path="/register" element={<Register onRegister={handleRegister} />} />
+						<Route path="*" element={<Navigate to="/" replace />} />
 					</Routes>
 				</main>
 				<ToastContainer position="top-right" autoClose={3000} hideProgressBar closeOnClick pauseOnHover={false} />
 			</div>
+
+			{/* Unified Auth Modal Overlay */}
+			{isAuthModalOpen && (
+				<div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm px-4">
+					{/* Modal backdrop click to close */}
+					<div className="absolute inset-0" onClick={closeAuthModal} />
+					<div className="relative z-10 w-full max-w-md animate-in fade-in zoom-in-95 duration-200">
+						{authModalMode === 'login' ? (
+							<Login 
+								onLogin={handleLogin} 
+								onClose={closeAuthModal} 
+								onSwitchToRegister={() => setAuthModalMode('register')} 
+							/>
+						) : (
+							<Register 
+								onRegister={handleRegister} 
+								onClose={closeAuthModal} 
+								onSwitchToLogin={() => setAuthModalMode('login')} 
+							/>
+						)}
+					</div>
+				</div>
+			)}
 		</BrowserRouter>
 	);
 }

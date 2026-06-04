@@ -24,6 +24,7 @@ function Home({
 	onToggleLike = () => {},
 	onAddComment = () => {},
 	onDeleteComment = () => {},
+	onOpenAuth = () => {},
 }) {
 	// Search and filter state
 	const [searchQuery, setSearchQuery] = useState('');
@@ -104,19 +105,21 @@ function Home({
 						</Link>
 					) : (
 						<>
-							<Link
-								className="inline-flex items-center gap-2 rounded-full bg-indigo-600 px-7 py-3.5 text-sm font-semibold text-white shadow-xl shadow-indigo-600/20 transition-all hover:scale-105 hover:bg-indigo-700"
-								to="/register"
+							<button
+								onClick={() => onOpenAuth('register')}
+								className="inline-flex items-center gap-2 rounded-full bg-indigo-600 px-7 py-3.5 text-sm font-semibold text-white shadow-xl shadow-indigo-600/20 transition-all hover:scale-105 hover:bg-indigo-700 focus:outline-none"
+								type="button"
 							>
 								<span>Create your account</span>
 								<ArrowRight className="h-4 w-4" />
-							</Link>
-							<Link
-								className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white/80 px-7 py-3.5 text-sm font-semibold text-slate-700 backdrop-blur-md shadow-sm transition-all hover:scale-105 hover:bg-slate-100/50"
-								to="/login"
+							</button>
+							<button
+								onClick={() => onOpenAuth('login')}
+								className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white/80 px-7 py-3.5 text-sm font-semibold text-slate-700 backdrop-blur-md shadow-sm transition-all hover:scale-105 hover:bg-slate-100/50 focus:outline-none"
+								type="button"
 							>
 								<span>Sign In</span>
-							</Link>
+							</button>
 						</>
 					)}
 				</div>

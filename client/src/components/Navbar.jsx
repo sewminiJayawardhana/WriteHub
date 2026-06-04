@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { Sparkles, LogOut, PenTool, Compass, User } from 'lucide-react';
 
-function Navbar({ currentUser = null, onLogout = () => {} }) {
+function Navbar({ currentUser = null, onLogout = () => {}, onOpenAuth = () => {} }) {
 	const [imgError, setImgError] = useState(false);
 	const initials = (currentUser?.name
 		?.split(' ')
@@ -67,12 +67,20 @@ function Navbar({ currentUser = null, onLogout = () => {} }) {
 
 					{!currentUser ? (
 						<div className="flex items-center gap-3">
-							<Link className="text-sm font-semibold text-slate-600 hover:text-slate-900 transition" to="/login">
+							<button 
+								onClick={() => onOpenAuth('login')}
+								className="text-sm font-semibold text-slate-600 hover:text-slate-900 transition focus:outline-none"
+								type="button"
+							>
 								Sign in
-							</Link>
-							<Link className="rounded-full bg-slate-950 px-4 py-2 text-xs font-bold text-white shadow-sm transition hover:bg-slate-800" to="/register">
+							</button>
+							<button 
+								onClick={() => onOpenAuth('register')}
+								className="rounded-full bg-slate-950 px-4 py-2 text-xs font-bold text-white shadow-sm transition hover:bg-slate-800 focus:outline-none"
+								type="button"
+							>
 								Get Started
-							</Link>
+							</button>
 						</div>
 					) : (
 						<div className="flex items-center gap-3">
