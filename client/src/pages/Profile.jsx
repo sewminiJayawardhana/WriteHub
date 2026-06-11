@@ -339,9 +339,10 @@ function Profile({
 						You have not published any posts yet.
 					</p>
 				) : (
-					<div className="grid gap-6 md:grid-cols-2">
+					<div className="space-y-8 max-w-8xl mx-auto">
 						{myPosts.map((post) => (
 							<PostCard
+
 								key={post.id}
 								post={post}
 								currentUser={currentUser}

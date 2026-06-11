@@ -229,7 +229,7 @@ function Home({
 						<p className="mt-1 text-xs text-slate-400">Try adjusting your filters or search keywords.</p>
 					</div>
 				) : (
-					<div className="grid gap-6 md:grid-cols-2">
+					<div className="space-y-8 max-w-10xl mx-auto">
 						{filteredPosts.map((post) => (
 							<PostCard
 								key={post.id}
