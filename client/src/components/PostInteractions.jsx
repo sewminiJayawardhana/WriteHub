@@ -1,3 +1,5 @@
+import { useState } from 'react';
+import { MessageSquare } from 'lucide-react';
 import LikeButton from './LikeButton.jsx';
 import CommentSection from './CommentSection.jsx';
 
@@ -8,6 +10,7 @@ function PostInteractions({
 	onAddComment = () => {},
 	onDeleteComment = () => {},
 }) {
+	const [showComments, setShowComments] = useState(false);
 	const likes = post.likes ?? [];
 	const comments = post.comments ?? [];
 	const isLiked = currentUser ? likes.includes(currentUser.id) : false;
@@ -21,16 +24,25 @@ function PostInteractions({
 					disabled={!currentUser}
 					onToggle={() => onToggleLike(post.id)}
 				/>
-				<p className="text-xs text-slate-400">{comments.length} comment{comments.length === 1 ? '' : 's'}</p>
+				<button 
+					onClick={() => setShowComments(!showComments)}
+					className="text-xs font-semibold text-slate-500 hover:text-indigo-600 transition flex items-center gap-1.5 focus:outline-none"
+					type="button"
+				>
+					<MessageSquare className="h-3.5 w-3.5" />
+					<span>{comments.length} comment{comments.length === 1 ? '' : 's'}</span>
+				</button>
 			</div>
 
-			<CommentSection
-				postId={post.id}
-				comments={comments}
-				currentUser={currentUser}
-				onAddComment={onAddComment}
-				onDeleteComment={onDeleteComment}
-			/>
+			{showComments && (
+				<CommentSection
+					postId={post.id}
+					comments={comments}
+					currentUser={currentUser}
+					onAddComment={onAddComment}
+					onDeleteComment={onDeleteComment}
+				/>
+			)}
 		</div>
 	);
 }
